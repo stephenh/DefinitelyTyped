@@ -239,6 +239,9 @@ export class FlatListTest extends React.Component<FlatListProperties<number>, {}
     }
 }
 
+const StringFlatList = FlatList as { new(): FlatList<string> };
+<StringFlatList data={["a", "b"]} renderItem={({ item }) => <Text>{item.toUpperCase()}</Text>} />
+
 export class SectionListTest extends React.Component<SectionListProperties<string>, {}> {
     render() {
         const sections = [

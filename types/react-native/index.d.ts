@@ -22,9 +22,9 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/// <reference types="react" />
-
 /// <reference path="globals.d.ts" />
+
+import * as React from 'react';
 
 export type MeasureOnSuccessCallback = (
     x: number,
@@ -3633,48 +3633,6 @@ export interface FlatListProperties<ItemT> extends VirtualizedListProperties<Ite
      * This may improve scroll performance for large lists.
      */
     removeClippedSubviews?: boolean;
-}
-
-export interface FlatListStatic<ItemT> extends React.ComponentClass<FlatListProperties<ItemT>> {
-    /**
-     * Exports some data, e.g. for perf investigations or analytics.
-     */
-    getMetrics: () => {
-        contentLength: number;
-        totalRows: number;
-        renderedRows: number;
-        visibleRows: number;
-    };
-
-    /**
-     * Scrolls to the end of the content. May be janky without `getItemLayout` prop.
-     */
-    scrollToEnd: (params?: { animated?: boolean }) => void;
-
-    /**
-     * Scrolls to the item at the specified index such that it is positioned in the viewable area
-     * such that viewPosition 0 places it at the top, 1 at the bottom, and 0.5 centered in the middle.
-     * Cannot scroll to locations outside the render window without specifying the getItemLayout prop.
-     */
-    scrollToIndex: (params: { animated?: boolean; index: number; viewOffset?: number; viewPosition?: number }) => void;
-
-    /**
-     * Requires linear scan through data - use `scrollToIndex` instead if possible.
-     * May be janky without `getItemLayout` prop.
-     */
-    scrollToItem: (params: { animated?: boolean; item: ItemT; viewPosition?: number }) => void;
-
-    /**
-     * Scroll to a specific content pixel offset, like a normal `ScrollView`.
-     */
-    scrollToOffset: (params: { animated?: boolean; offset: number }) => void;
-
-    /**
-     * Tells the list an interaction has occured, which should trigger viewability calculations,
-     * e.g. if waitForInteractions is true and the user has not scrolled. This is typically called
-     * by taps on items or by navigation actions.
-     */
-    recordInteraction: () => void;
 }
 
 /**
@@ -8370,8 +8328,47 @@ export type ImageBackground = ImageBackgroundStatic;
 export var ImagePickerIOS: ImagePickerIOSStatic;
 export type ImagePickerIOS = ImagePickerIOSStatic;
 
-export var FlatList: FlatListStatic<any>;
-export type FlatList<ItemT> = FlatListStatic<ItemT>;
+export class FlatList<ItemT> extends React.Component<FlatListProperties<ItemT>> {
+    /**
+     * Exports some data, e.g. for perf investigations or analytics.
+     */
+    getMetrics(): {
+        contentLength: number;
+        totalRows: number;
+        renderedRows: number;
+        visibleRows: number;
+    };
+
+    /**
+     * Scrolls to the end of the content. May be janky without `getItemLayout` prop.
+     */
+    scrollToEnd(params?: { animated?: boolean }): void;
+
+    /**
+     * Scrolls to the item at the specified index such that it is positioned in the viewable area
+     * such that viewPosition 0 places it at the top, 1 at the bottom, and 0.5 centered in the middle.
+     * Cannot scroll to locations outside the render window without specifying the getItemLayout prop.
+     */
+    scrollToIndex(params: { animated?: boolean; index: number; viewOffset?: number; viewPosition?: number }): void;
+
+    /**
+     * Requires linear scan through data - use `scrollToIndex` instead if possible.
+     * May be janky without `getItemLayout` prop.
+     */
+    scrollToItem(params: { animated?: boolean; item: ItemT; viewPosition?: number }): void;
+
+    /**
+     * Scroll to a specific content pixel offset, like a normal `ScrollView`.
+     */
+    scrollToOffset(params: { animated?: boolean; offset: number }): void;
+
+    /**
+     * Tells the list an interaction has occured, which should trigger viewability calculations,
+     * e.g. if waitForInteractions is true and the user has not scrolled. This is typically called
+     * by taps on items or by navigation actions.
+     */
+    recordInteraction(): void;
+}
 
 export var LayoutAnimation: LayoutAnimationStatic;
 export type LayoutAnimation = LayoutAnimationStatic;
